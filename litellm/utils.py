@@ -7320,6 +7320,8 @@ class ProviderConfigManager:
             return litellm.NvidiaNimRerankConfig()
         elif litellm.LlmProviders.VERTEX_AI == provider:
             return litellm.VertexAIRerankConfig()
+        elif litellm.LlmProviders.VOYAGE == provider:
+            return litellm.VoyageRerankConfig()
         return litellm.CohereRerankConfig()
 
     @staticmethod

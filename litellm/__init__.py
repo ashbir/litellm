@@ -1255,6 +1255,7 @@ from .llms.voyage.embedding.transformation import VoyageEmbeddingConfig
 from .llms.voyage.embedding.transformation_contextual import (
     VoyageContextualEmbeddingConfig,
 )
+from .llms.voyage.rerank.transformation import VoyageRerankConfig
 from .llms.infinity.embedding.transformation import InfinityEmbeddingConfig
 from .llms.azure_ai.chat.transformation import AzureAIStudioConfig
 from .llms.mistral.chat.transformation import MistralConfig
