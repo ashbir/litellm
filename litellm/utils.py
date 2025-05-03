@@ -6961,6 +6961,8 @@ class ProviderConfigManager:
             return litellm.JinaAIRerankConfig()
         elif litellm.LlmProviders.HUGGINGFACE == provider:
             return litellm.HuggingFaceRerankConfig()
+        elif litellm.LlmProviders.VOYAGE == provider:
+            return litellm.VoyageRerankConfig()
         return litellm.CohereRerankConfig()
 
     @staticmethod
