@@ -123,13 +123,18 @@ class VoyageRerankConfig(BaseRerankConfig):
             raise VoyageError(
                 message=raw_response.text, status_code=raw_response.status_code
             )
-        _billed_units = RerankBilledUnits(**raw_response_json.get("usage", {}))
+        
+        # Get token usage from the response
+        usage = raw_response_json.get("usage", {})
+        total_tokens = usage.get("total_tokens", 0)
+        
+        # Create billed units with total_tokens
+        _billed_units = RerankBilledUnits(total_tokens=total_tokens)
+        
+        # For rerank, all tokens are input tokens
         _tokens = RerankTokens(
-            input_tokens=raw_response_json.get("usage", {}).get("prompt_tokens", 0),
-            output_tokens=(
-                raw_response_json.get("usage", {}).get("total_tokens", 0)
-                - raw_response_json.get("usage", {}).get("prompt_tokens", 0)
-            ),
+            input_tokens=total_tokens,  # For rerank, all tokens are input tokens
+            output_tokens=0  # Rerank doesn't have output tokens
         )
         rerank_meta = RerankResponseMeta(billed_units=_billed_units, tokens=_tokens)
 
