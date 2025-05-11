@@ -459,6 +459,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Configure multi platform Docker builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@e0e4588fad221d38ee467c0bffd91115366dc0c5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@edfb0fe6204400c56fbfd3feba3fe9ad1adfa345
+
       - name: Build and push Docker image for stable-patch
         uses: docker/build-push-action@v5
         with:
@@ -466,4 +472,5 @@ jobs:
           file: ./Dockerfile # Assuming the main Dockerfile from the root
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable-patch # e.g., ghcr.io/your-username/your-repo:stable-patch
+          platforms: local,linux/amd64,linux/arm64,linux/arm64/v8
 
