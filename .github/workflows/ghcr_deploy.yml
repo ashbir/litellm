@@ -12,6 +12,9 @@ on:
       commit_hash:
         description: "Commit hash"
         required: true
+  push: # Added for stable-patch
+    branches:
+      - stable-patch
 
 # Defines two custom environment variables for the workflow. Used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -430,4 +433,30 @@ jobs:
               }
             ]
           }' $WEBHOOK_URL
+
+  build_and_push_stable_patch: # New job for stable-patch
+    name: Build and Push for stable-patch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/stable-patch' # Condition to run only for stable-patch pushes
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Checks out the commit pushed to stable-patch
+
+      - name: Log in to the GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }} # ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image for stable-patch
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile # Assuming the main Dockerfile from the root
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:stable-patch # e.g., ghcr.io/your-username/your-repo:stable-patch
 
