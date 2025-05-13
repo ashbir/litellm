@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Tuple
 
 import httpx
 
@@ -15,6 +15,7 @@ from litellm.types.rerank import (
     RerankResponseResult,
     RerankTokens,
 )
+from litellm.types.utils import ModelInfo
 
 class VoyageRerankConfig(BaseRerankConfig):
     def __init__(self) -> None:
@@ -158,3 +159,29 @@ class VoyageRerankConfig(BaseRerankConfig):
             results=voyage_results,
             meta=rerank_meta,
         )  # Return response
+    
+    def calculate_rerank_cost(
+        self,
+        model: str,
+        custom_llm_provider: Optional[str] = None,
+        billed_units: Optional[RerankBilledUnits] = None,
+        model_info: Optional[ModelInfo] = None,
+    ) -> Tuple[float, float]:
+        """
+        Jina AI reranker is priced at $0.000000018 per token.
+        """
+        if (
+            model_info is None
+            or "input_cost_per_token" not in model_info
+            or model_info["input_cost_per_token"] is None
+            or billed_units is None
+        ):
+            return 0.0, 0.0
+
+        total_tokens = billed_units.get("total_tokens")
+        if total_tokens is None:
+            return 0.0, 0.0
+
+        input_cost = model_info["input_cost_per_token"] * total_tokens
+        return input_cost, 0.0
+    
