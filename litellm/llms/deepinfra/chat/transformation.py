@@ -71,7 +71,8 @@ class DeepInfraConfig(OpenAIGPTConfig):
             "top_p",
             "response_format",
             "tools",
-            "tool_choice"
+            "tool_choice",
+            "reasoning_effort"
         ]
 
         if litellm.supports_reasoning(
