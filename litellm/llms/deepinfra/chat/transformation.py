@@ -69,6 +69,7 @@ class DeepInfraConfig(OpenAIGPTConfig):
             "response_format",
             "tools",
             "tool_choice",
+            "reasoning_effort",
         ]
 
     def map_openai_params(
