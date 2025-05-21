@@ -65,7 +65,7 @@ class OpenMeterLogger(CustomLogger):
                 "total_tokens": response_obj["usage"].get("total_tokens"),
             }
 
-        user_param = kwargs.get("user", None)  # end-user passed in via 'user' param
+        user_param = kwargs.get("user", "Litellm")  # end-user passed in via 'user' param
         
         # If no user provided directly, try to get it from token user_id
         if user_param is None:
